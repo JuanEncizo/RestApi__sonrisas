@@ -9,7 +9,7 @@ import base64
 from io import BytesIO
 
 import torch
-from flask import Flask, request
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -47,6 +47,10 @@ def predict():
           
           
         return str(data[['name']])+'\n'+ base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+@app.route('/none')
+def none():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Flask api exposing yolov5 model")
