@@ -58,7 +58,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     model = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt', force_reload=True)
-    model.conf = 0.1
+    model.conf = 0.7
     #model = torch.hub.load(
        # "ultralytics/yolov5", "yolov5s", pretrained=True, force_reload=True
    # )#.autoshape()  # force_reload = recache latest code
