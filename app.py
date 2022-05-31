@@ -1,5 +1,5 @@
 """
-Run a rest API exposing the yolov5s object detection model
+Run a rest API exposing the yolov5s object detection mode
 """
 import argparse
 import io
