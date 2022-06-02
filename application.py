@@ -10,11 +10,11 @@ from io import BytesIO
 import torch
 from flask import Flask, render_template, request
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 DETECTION_URL = "/detect"
 
-@app.route(DETECTION_URL, methods=["POST"])
+@application.route(DETECTION_URL, methods=["POST"])
 def predict():
     if not request.method == "POST":
         return
@@ -40,7 +40,7 @@ def predict():
           #     
         return str(data[['name']])+'\n'+ base64.b64encode(buffered.getvalue()).decode('utf-8')
 
-@app.route('/none')
+@application.route('/none')
 def none():
     return render_template('index.html')
 
@@ -58,5 +58,5 @@ if __name__ == "__main__":
    # )#.autoshape()  # force_reload = recache latest code
    
     model.eval()
-    app.run(host="0.0.0.0", port=4000, debug=True)  # debug=True causes Restarting with stat
-
+    #application.run(host="0.0.0.0", port=4000, debug=True)  # debug=True causes Restarting with stat
+    application.run(debug=True)
