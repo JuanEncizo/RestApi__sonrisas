@@ -35,8 +35,8 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
+#permissions:
+ # contents: read
 
 jobs:
   build:
@@ -66,8 +66,8 @@ jobs:
           file: ./Dockerfile
 
   deploy:
-    permissions:
-      contents: none
+    #permissions:
+      #contents: none
     runs-on: ubuntu-latest
     needs: build
     environment:
