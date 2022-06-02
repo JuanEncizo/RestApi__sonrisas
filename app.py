@@ -58,5 +58,5 @@ if __name__ == "__main__":
    # )#.autoshape()  # force_reload = recache latest code
    
     model.eval()
-    app.run(host="0.0.0.0", port=8000, debug=True)  # debug=True causes Restarting with stat
+    app.run()  # debug=True causes Restarting with stat
 
