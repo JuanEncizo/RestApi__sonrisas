@@ -9,8 +9,10 @@ from io import BytesIO
 
 import torch
 from flask import Flask, render_template, request
+from flask_ngrok import run_with_ngrok
 
 application = Flask(__name__)
+run_with_ngrok(application)
 
 DETECTION_URL = "/detect"
 
@@ -60,6 +62,6 @@ if __name__ == "__main__":
     model.eval()
 
     #application.run(host="0.0.0.0", port=4000, debug=True)  # debug=True causes Restarting with stat
-    application.run(debug=True)
+    application.run()
 
 
