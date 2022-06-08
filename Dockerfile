@@ -11,5 +11,5 @@ RUN pip install -r requirements.txt
 
 RUN apt-get update && apt-get install libgl1 -y
 
-CMD [ "python", "app.py" ]
+CMD [ "python", "application.py" ]
 
