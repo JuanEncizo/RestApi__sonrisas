@@ -9,14 +9,15 @@ import base64
 from io import BytesIO
 import shutil                                 #Eliminacion de carpetas del sistema operativo
 from shutil import rmtree
-import os                                     #Para controlar sistema operativo
+import os
+import requests                                     #Para controlar sistema operativo
 
 import torch                                  
 from flask import Flask, render_template, request, send_file, make_response      #lib para crear el servidor web
 from flask_ngrok import run_with_ngrok        #lib para crear la URL publica 
 
 application = Flask(__name__)
-run_with_ngrok(application)                   #linea para indicar que se arrancara el servidor con Ngrok
+#run_with_ngrok(application)                   #linea para indicar que se arrancara el servidor con Ngrok
 
 DETECTION_URL = "/detect"                                 #Direccion que contiene la fucionalidad de detección
 
@@ -57,6 +58,52 @@ def predict():
         # Se envia la imagen con la detección y con el valor de la Clasfición en el Campo DetectionVal
         
 
+@application.route("/send-image/<path:url>")
+def image_check(url):
+    # ----- SECTION 1 -----  
+    #File naming process for nameless base64 data.
+    #We are using the timestamp as a file_name.
+    from datetime import datetime
+    dateTimeObj = datetime.now()
+    file_name_for_base64_data = dateTimeObj.strftime("%d-%b-%Y--(%H-%M-%S)")
+    
+    #File naming process for directory form <file_name.jpg> data.
+    #We are taken the last 8 characters from the url string.
+    file_name_for_regular_data = url[-10:-4]
+    
+    # ----- SECTION 2 -----
+    try:
+        # Base64 DATA
+        if "data:image/jpeg;base64," in url:
+            base_string = url.replace("data:image/jpeg;base64,", "")
+            decoded_img = base64.b64decode(base_string)
+            img = Image.open(BytesIO(decoded_img))
+
+            file_name = file_name_for_base64_data + ".jpg"
+            img.save(file_name, "jpeg")
+
+        # Base64 DATA
+        elif "data:image/png;base64," in url:
+            base_string = url.replace("data:image/png;base64,", "")
+            decoded_img = base64.b64decode(base_string)
+            img = Image.open(BytesIO(decoded_img))
+
+            file_name = file_name_for_base64_data + ".png"
+            img.save(file_name, "png")
+
+        # Regular URL Form DATA
+        else:
+            response = requests.get(url)
+            img = Image.open(BytesIO(response.content)).convert("RGB")
+            file_name = file_name_for_regular_data + ".jpg"
+            img.save(file_name, "jpeg")
+        
+    # ----- SECTION 3 -----    
+        status = "Image has been succesfully sent to the server."
+    except Exception as e:
+        status = "Error! = " + str(e)
+
+    return status
 
 @application.route('/none') # Ruta para prueba de funcionamiento,  Solo muestra el memsaje de hola en el navegador
 def none():
@@ -72,6 +119,6 @@ if __name__ == "__main__":
     model.conf = 0.7 # Indica el nivel de confianza minimo en la detección
     model.eval()
 
-    #application.run(host="0.0.0.0", port=4000, debug=True)  # Inicia en servidor Local
-    application.run() # inicia en Servidor Remoto,  Tener en cuenta que en cada inicio de servidor esta direccion cambia
+    application.run(host="0.0.0.0", port=4000, debug=True)  # Inicia en servidor Local
+    #application.run() # inicia en Servidor Remoto,  Tener en cuenta que en cada inicio de servidor esta direccion cambia
                       # debido a que se esta usando una libreria gratuita de tunelamiento.
