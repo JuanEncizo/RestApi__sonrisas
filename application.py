@@ -17,6 +17,7 @@ import torch
 from flask import Flask, jsonify, render_template, request, send_file, make_response, send_from_directory      #lib para crear el servidor web
 from flask_ngrok import run_with_ngrok        #lib para crear la URL publica 
 from flask import url_for, redirect
+
 application = Flask(__name__)
 #run_with_ngrok(application)                   #linea para indicar que se arrancara el servidor con Ngrok
 
